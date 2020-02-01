@@ -1,5 +1,5 @@
-INCLUDEDIR = -I/usr/include
-LIBDIR = -L/usr/lib
+INCLUDEDIR = -I /usr/include
+LIBDIR = -L /usr/lib
 WINDOWSARGS = -static-libgcc -static-libstdc++
 SDL2ARGS = -lSDL2
 WIN32 = i686-w64-mingw32-
@@ -7,10 +7,10 @@ WIN64 = x86_64-w64-mingw32-
 
 
 all : obj/main.o
-	$(WIN64)g++ -Wall obj/main.o -o release/main.exe
+	g++ -Wall obj/main.o $(SDL2ARGS) $(INCLUDEDIR) $(LIBDIR) -o release/main.exe
 
 obj/main.o  : src/main.cpp
-	$(WIN64)g++ -Wall src/main.cpp -c -o obj/main.o $(SDL2ARGS) $(INCLUDEDIR)
+	g++ -Wall src/main.cpp $(SDL2ARGS) $(INCLUDEDIR) $(LIBDIR) -c -o obj/main.o
 
 run:
 	make
