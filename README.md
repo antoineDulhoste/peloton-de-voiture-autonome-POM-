@@ -1,11 +1,11 @@
 THIS BUILD IS MADE FOR WINDOWS OS.
 
 Requirements to compile:
-  sudo apt-get install libsdl2-dev
-  sudo apt-get install mingw-w64
+  -sudo apt-get install libsdl2-dev
+  -sudo apt-get install mingw-w64
 
 Use to compile :
-  make
+  -make
 
 Compile and run:
-  make run
+  -make run
