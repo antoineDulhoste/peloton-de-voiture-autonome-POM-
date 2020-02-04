@@ -6,8 +6,4 @@ Requirements to compile:
 Use to compile :
 
   make
-
-
-Compile and run:
-
-  make run
+  make win (for windows compilation)
