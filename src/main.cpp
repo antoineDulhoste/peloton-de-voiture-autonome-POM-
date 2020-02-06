@@ -1,14 +1,24 @@
 #include <iostream>
-
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
-
+#include <../src/Voiture.h>
 using namespace std;
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
 int main(int argc, char* args[]) {
+  char nom[]="bruno";
+  char* n=&nom[0];
+  int * pd=new int[2];
+  int * pa=new int[2];
+  pd[0]=1;
+  pd[1]=1;
+  pa[0]=5;
+  pa[1]=4;
+  Voiture v(n,pd,pa);
+  pd=v.getPointArrivee();
+  std::cout<<*pd<<pd[1]<<std::endl;
   SDL_Window* window = NULL;
   SDL_Surface* screenSurface = NULL;
   SDL_Event event;
