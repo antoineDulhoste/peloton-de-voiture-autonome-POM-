@@ -1,7 +1,7 @@
 #include <iostream>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
-#include <../src/Voiture.h>
+#include "voiture.h"
 using namespace std;
 
 #define SCREEN_WIDTH 640
