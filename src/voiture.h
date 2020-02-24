@@ -1,17 +1,21 @@
+#include "point.h"
+#include <queue>
+using namespace std;
 class Voiture
 {
 public:
-	Voiture(char* s,int* pDep,int* &pAr);
+	Voiture(char* s,Point* pDep,Point* &pAr);
 	char* getNom();
-	int* getPointArrivee();
-	int* getPointDepart();
+	Point* getPointArrivee();
+	Point* getPointDepart();
 	void setNom(char* s);
-	void setPointArrivee(int* pDep);
-	void setPointDepart(int* pAr);
+	void setPointArrivee(Point* pDep);
+	void setPointDepart(Point* pAr);
+	queue<Point*> itineraire;
 	~Voiture();
 
 private:
 	char* nom;
-	int * pointDepart;
-	int * pointArrivee;
+	Point* pointDepart;
+	Point* pointArrivee;
 };
