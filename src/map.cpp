@@ -1,8 +1,8 @@
 #include "map.h"
 
-Map::Map(Point** m,int larg,int lon): map(m),largeur(larg),longueur(lon){};
+Map::Map(Point* m,int larg,int lon): map(m),largeur(larg),longueur(lon){};
 
-Point** Map::getMap(){
+Point* Map::getMap(){
 	return this->map;
 };
 int Map::getLargeur(){
@@ -12,7 +12,7 @@ int Map::getLongueur(){
 	return this->longueur;
 };
 
-void Map::setMap(Point** m){
+void Map::setMap(Point* m){
 	this->map=m;
 };
 void Map::setLargeur(int larg){
