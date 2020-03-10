@@ -1,11 +1,13 @@
 Requirements to compile:
 
-  sudo apt-get install libsdl2-dev
-  sudo apt-get install libsdl2-image-dev
-  sudo apt-get install mingw-w64    (for windows compilation)
+  - For linux compilation :
+   - sudo apt-get install libsdl2-dev
+   - sudo apt-get install libsdl2-image-dev
 
+  - For windows compilation :
+   - sudo apt-get install mingw-w64
 
 Use to compile :
 
-  make
-  make win (for windows compilation)
+  - make
+  - make win (for windows compilation)
