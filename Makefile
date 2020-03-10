@@ -1,7 +1,7 @@
 WINDOWSARGS = -static-libgcc -static-libstdc++
 WIN32 = i686-w64-mingw32-
 WIN64 = x86_64-w64-mingw32-
-SDL2ARGS=-lSDL2
+SDL2ARGS=-lSDL2 -lSDL2_image
 
 all :
 	make release/main.exe WIN32='' WIN64='' WINDOWSARGS=''  INCLUDEDIR='' LIBDIR=''

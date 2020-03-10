@@ -1,23 +1,22 @@
 #include "point.h"
 
-Point::Point(bool drive,char* img): image(img),drivable(drive){};
+Point::Point(int x, int y, std::string img): x(x), y(y), image(img){};
 
-char* Point::getImage(){
+std::string Point::getImage(){
 	return this->image;
-};
+}
 
-void Point::setImage(char* img){
+void Point::setImage(std::string img){
 	this->image=img;
-};
+}
 
-bool Point::getDrivable(){
-	return this->drivable;
-};
+int Point::getX(){return this->x;}
+void Point::setX(int x){this->x=x;}
+int Point::getY(){return this->y;}
+void Point::setY(int y){this->y=y;}
 
-void Point::setDrivable(bool drive){
-	this->drivable=drive;
-};
+Point Point::getDestination(int index){
+	return destinations[index];
+}
 
-Point::~Point(){
-	delete image;
-};
+Point::~Point(){};
