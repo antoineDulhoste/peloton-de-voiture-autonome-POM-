@@ -1,6 +1,7 @@
 #include <iostream>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
+#include <vector>
 #include <SDL2/SDL_image.h>
 #include "voiture.h"
 #include "point.h"
@@ -15,9 +16,26 @@ SDL_Window* window = NULL;  //initialize to null to setup renderer and textures 
 SDL_Renderer *renderer = NULL;
 
 int main(int argc, char* args[]) {
+  std::vector<Point> points;
+  points.push_back(Point(42,28));
+  points.push_back(Point(47,9));
+  points.push_back(Point(76,35));
+	points.push_back(Point(42,75));
+  points.push_back(Point(84,65));
+  points.push_back(Point(8,80));
+  points.push_back(Point(69,13));
+	points.push_back(Point(57,52));
+  points.push_back(Point(63,79));
+	points.push_back(Point(6,95));
+	points.push_back(Point(96,59));
+	points.push_back(Point(27,49));
+	points.push_back(Point(24,17));
+	points.push_back(Point(54,94));
+	points.push_back(Point(18,60));
+
 
   srand(93);    //seed random
-  Map m(10, 100,100);
+  Map m(points, 100,100);
 
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());return 1;}
   if (IMG_Init(IMG_INIT_JPG|IMG_INIT_PNG) < 0) {fprintf(stderr, "could not initialize sdl2_image: %s\n", SDL_GetError());return 1;}

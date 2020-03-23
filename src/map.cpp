@@ -4,7 +4,7 @@ Map::Map(int nbPoints, int larg, int lon):nbPoints(nbPoints), largeur(larg),long
 	for(int i = 0; i<nbPoints; i++){
 		int x= rand()%lon;
 		int y= rand()%larg;
-		points.push_back(Point(x,y, "point"));
+		points.push_back(Point(x,y));
 		std::cout<<"point x:"<<x<<" y:"<<y<<std::endl;
 	}
 }

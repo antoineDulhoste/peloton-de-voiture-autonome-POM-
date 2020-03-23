@@ -1,14 +1,6 @@
 #include "point.h"
 
-Point::Point(int x, int y, std::string img): x(x), y(y), image(img){};
-
-std::string Point::getImage(){
-	return this->image;
-}
-
-void Point::setImage(std::string img){
-	this->image=img;
-}
+Point::Point(int x, int y): x(x), y(y){};
 
 int Point::getX(){return this->x;}
 void Point::setX(int x){this->x=x;}
