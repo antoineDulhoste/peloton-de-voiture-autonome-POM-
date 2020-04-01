@@ -17,7 +17,6 @@ public:
 	void setLargeur(int larg);
 	void setLongueur(int lon);
 	void setRoute(int index1, int index2);
-	void rmRoute(int index1, int index2);
 
 	~Map();
 

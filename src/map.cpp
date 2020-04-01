@@ -29,8 +29,5 @@ void Map::setRoute(int index1, int index2){
 	points.at(index1).setDestination(index2);
 	points.at(index2).setDestination(index1);
 }
-void rmRoute(int index1, int index2){
-	
-}
 
 Map::~Map(){}
