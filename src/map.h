@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <math.h>
+#include <algorithm>
+
+#ifndef MAP_H
+#define MAP_H
 
 class Map
 {
@@ -18,6 +24,8 @@ public:
 	void setLongueur(int lon);
 	void setRoute(int index1, int index2);
 
+	std::vector<int> getItineraireBetween(int indexDepart, int indexArrivee);
+
 	~Map();
 
 private:
@@ -25,4 +33,8 @@ private:
 	int nbPoints;
 	int largeur;
 	int longueur;
+
+	double costForIndexToIndex(int index1, int index2);
 };
+
+#endif

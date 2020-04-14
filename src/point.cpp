@@ -9,13 +9,20 @@ void Point::setY(int y){this->y=y;}
 int Point::getId(){return this->id;}
 void Point::setId(int id){this->id=id;}
 
-std::vector<int> Point::getDestinations(){
+std::vector<destination> Point::getDestinations(){
 	return destinations;
 }
-void Point::setDestination(int id){
-	destinations.push_back(id);
+void Point::addDestination(int index, double cost){
+	destination dest = {index, cost};
+	destinations.push_back(dest);
 }
-void Point::rmDestination(int id){
+
+double Point::getCostForDestIndex(int index){
+	for(unsigned i=0;i<destinations.size();i++){
+		if(destinations.at(i).id == index)
+			return destinations.at(i).cost;
+	}
+	return -1;
 }
 
 Point::~Point(){};

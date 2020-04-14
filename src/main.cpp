@@ -16,74 +16,6 @@ using namespace std;
 SDL_Window* window = NULL;  //initialize to null to setup renderer and textures before first display
 SDL_Renderer *renderer = NULL;
 
-
-double** costTab(int t, Map& m)
-{
-  double** cost = 0;
-  cost = new double*[t];
-
-  for (int h = 0; h < t; h++)
-  {
-    cost[h] = new double[t];
-    std::vector<int> dest = m.getPoints().at(h).getDestinations();
-    int X=m.getPoints().at(h).getX();
-    int Y=m.getPoints().at(h).getY();
-    for (int w = 0; w < t; w++)
-    {
-      cost[h][w]=0;
-    }
-    for(int unsigned i=0;i<dest.size();i++){
-      int Xi=m.getPoints().at(dest[i]).getX();
-      int Yi=m.getPoints().at(dest[i]).getY();
-      cost[h][dest[i]]=sqrt(pow(X-Xi,2)+pow(Y-Yi,2));
-    }
-  }
-  return cost;
-}
-
-int minDist(double* dist,bool* dset,int t){
-  double min = 10000;
-  int min_index;
-  for (int i = 0; i < t; i++)
-  if (!dset[i] && dist[i] < min && dist[i]!=-1)
-  min = dist[i], min_index = i;
-  return min_index;
-}
-
-stack <int> itineraire(double** cost,int T,int index_d,int index_a){
-  double* dist= new double[T];
-  bool* dset= new bool[T];
-  int* index_trace= new int[T];
-  for (int i=0;i<T;i++){
-    dist[i]=-1;
-    index_trace[i]=-1;
-    dset[i]=false;
-  }
-  int index=index_d;
-  dist[index_d]=0;
-  int cost_index=0;
-  int j=0;
-  while(j<T){
-    dset[index]=true;
-    for(int i=0;i<T;i++){
-      if(!dset[i] && cost[index][i]!=0 &&
-       (cost[index][i]+cost_index<dist[i] || dist[i]==-1))
-        dist[i]=cost[index][i]+cost_index,index_trace[i]=index;
-    }
-    index=minDist(dist,dset,T);
-    cost_index=dist[index];
-    j++;
-  }
-  stack <int> s;
-  index=index_a;
-  s.push(index);
-  while(index!=index_d){
-    index=index_trace[index];
-    s.push(index);
-  }
-  return s;
-}
-
 int main(int argc, char* args[]) {
   //srand(93);    //seed random
   std::vector<Point> points;
@@ -127,10 +59,10 @@ int main(int argc, char* args[]) {
   m.setRoute(7, 8);
   m.setRoute(8, 13);
   m.setRoute(11, 14);
-  double** cost=costTab(15,m);
   char nom[10]="v1";
   Voiture v1(nom,9,6);
-  v1.itineraire=itineraire(cost,15,9,2);
+  v1.itineraire = m.getItineraireBetween(9,6);
+  //v1.itineraire=itineraire(cost,15,9,2);
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());return 1;}
   if (IMG_Init(IMG_INIT_JPG|IMG_INIT_PNG) < 0) {fprintf(stderr, "could not initialize sdl2_image: %s\n", SDL_GetError());return 1;}
 
@@ -161,8 +93,8 @@ int main(int argc, char* args[]) {
         SDL_RenderDrawLine(renderer,
                           m.getPoints().at(i).getX()*SCREEN_HEIGHT/100,
                           m.getPoints().at(i).getY()*SCREEN_HEIGHT/100,
-                          m.getPoints().at(m.getPoints().at(i).getDestinations().at(j)).getX()*SCREEN_HEIGHT/100,
-                          m.getPoints().at(m.getPoints().at(i).getDestinations().at(j)).getY()*SCREEN_HEIGHT/100
+                          m.getPoints().at(m.getPoints().at(i).getDestinations().at(j).id).getX()*SCREEN_HEIGHT/100,
+                          m.getPoints().at(m.getPoints().at(i).getDestinations().at(j).id).getY()*SCREEN_HEIGHT/100
         );
       }
     }

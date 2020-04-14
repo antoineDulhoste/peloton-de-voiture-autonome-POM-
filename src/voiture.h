@@ -1,5 +1,5 @@
 #include "point.h"
-#include <stack>
+#include <vector>
 using namespace std;
 class Voiture
 {
@@ -11,7 +11,7 @@ public:
 	void setNom(char* s);
 	void setPointArrivee(int pDep);
 	void setPointDepart(int pAr);
-	stack<int> itineraire;
+	std::vector<int> itineraire;
 	~Voiture();
 
 private:
