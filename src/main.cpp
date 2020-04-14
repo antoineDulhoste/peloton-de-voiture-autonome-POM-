@@ -62,6 +62,8 @@ int main(int argc, char* args[]) {
   char nom[10]="v1";
   Voiture v1(nom,9,6);
   v1.itineraire = m.getItineraireBetween(9,6);
+  for(unsigned i=0;i<v1.itineraire.size();i++)
+    std::cout<<v1.itineraire.at(i)<<" ";
   //v1.itineraire=itineraire(cost,15,9,2);
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());return 1;}
   if (IMG_Init(IMG_INIT_JPG|IMG_INIT_PNG) < 0) {fprintf(stderr, "could not initialize sdl2_image: %s\n", SDL_GetError());return 1;}

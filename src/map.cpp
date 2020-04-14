@@ -36,13 +36,20 @@ double Map::costForIndexToIndex(int index1, int index2){
 							pow(points.at(index1).getY()-points.at(index2).getY(),2));
 }
 
+struct destinationitineraire{
+	int id;
+	double cost;
+	int parent;
+};
+
 struct destinationComparator{
-    bool operator()(const destination& l, const destination& r)
+    bool operator()(const destinationitineraire& l, const destinationitineraire& r)
     {return l.cost > r.cost;}
 };
 std::vector<int> Map::getItineraireBetween(int indexDepart, int indexArrivee){
-	std::priority_queue<destination, std::vector<destination>, destinationComparator> toCheck;
-	std::vector<int> final;
+	std::priority_queue<destinationitineraire, std::vector<destinationitineraire>, destinationComparator> toCheck;
+	std::vector<destinationitineraire> final;
+	std::vector<int> itineraire;
 	double* distance= new double[points.size()];
   bool* alreadyListed= new bool[points.size()];
   for (unsigned i=0;i<points.size();i++){
@@ -50,36 +57,35 @@ std::vector<int> Map::getItineraireBetween(int indexDepart, int indexArrivee){
     alreadyListed[i]=false;
   }
 
-  destination index= destination{indexDepart,0};
+  destinationitineraire index= destinationitineraire{indexDepart,0,-1};
   distance[index.id]=0;
 	alreadyListed[index.id]=true;
 	toCheck.push(index);
 	while(!toCheck.empty()){
 		index = toCheck.top();
 		toCheck.pop();
-		std::cout<<"DEPART DE "<<index.id<<std::endl;
 		if(index.id == indexArrivee){
-			std::cout<<"ARRIVEE "<<index.id<<std::endl;
-			return final;
+			itineraire.push_back(index.id);
+			final.push_back(index);
+			for(unsigned i=0;i<final.size();i++){
+				if(final.at(final.size()-1-i).id == itineraire.at(itineraire.size()-1) && final.at(final.size()-1-i).parent != -1)
+					itineraire.push_back(final.at(final.size()-1-i).parent);
+			}
+			std::reverse(itineraire.begin(), itineraire.end());
+			return itineraire;
 		}
 	  for(unsigned i=0;i<points.at(index.id).getDestinations().size();i++){	//ajouter les voisins
 			int voisinId = points.at(index.id).getDestinations().at(i).id;
 			double voisinCost = points.at(index.id).getDestinations().at(i).cost;
 	    if(!alreadyListed[voisinId] && (distance[index.id]+ voisinCost < distance[voisinId] || distance[voisinId]==-1)){
 	      distance[voisinId]=distance[index.id] + voisinCost;
-				std::cout<<"ajout de "<<voisinId<<" a la liste des prochains voisins"<<std::endl;
-				toCheck.push(destination{voisinId, distance[voisinId]});
+				toCheck.push(destinationitineraire{voisinId, distance[voisinId], index.id});
 	    }
 	  }
 		alreadyListed[index.id]=true;
-		std::priority_queue<destination, std::vector<destination>, destinationComparator> q = toCheck;
-		while(!q.empty()) {		//affichage de la liste de check actuelle
-				std::cout << q.top().id << " ";
-				q.pop();
-		}
-		std::cout << '\n';
+		final.push_back(index);
 	}
-  return final;
+  return itineraire;
 }
 
 Map::~Map(){}
