@@ -41,7 +41,6 @@ struct destinationitineraire{
 	double cost;
 	int parent;
 };
-
 struct destinationComparator{
     bool operator()(const destinationitineraire& l, const destinationitineraire& r)
     {return l.cost > r.cost;}

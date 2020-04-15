@@ -1,8 +1,11 @@
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <vector>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "voiture.h"
 #include "point.h"
 #include "map.h"
@@ -12,6 +15,7 @@ using namespace std;
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 #define CIRCLE_SIZE 20
+#define FONT_SIZE 20
 
 SDL_Window* window = NULL;  //initialize to null to setup renderer and textures before first display
 SDL_Renderer *renderer = NULL;
@@ -64,7 +68,7 @@ int main(int argc, char* args[]) {
   v1.itineraire = m.getItineraireBetween(9,6);
   for(unsigned i=0;i<v1.itineraire.size();i++)
     std::cout<<v1.itineraire.at(i)<<" ";
-  //v1.itineraire=itineraire(cost,15,9,2);
+  if (TTF_Init() < 0) {fprintf(stderr, "could not initialize sdl2_ttf: %s\n", TTF_GetError());return 1;}
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());return 1;}
   if (IMG_Init(IMG_INIT_JPG|IMG_INIT_PNG) < 0) {fprintf(stderr, "could not initialize sdl2_image: %s\n", SDL_GetError());return 1;}
 
@@ -74,6 +78,16 @@ int main(int argc, char* args[]) {
                 			    SDL_WINDOW_SHOWN);
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+  TTF_Font * font = TTF_OpenFont("../data/Aller_Bd.ttf", 25);
+  SDL_Color fontColor = { 0, 0, 0 };
+  SDL_Texture* texFont[15];
+  SDL_Surface* fontSurface;
+  for(unsigned i=0;i<m.getPoints().size();i++){
+    char str[10]; itoa(i, str, 10);
+    fontSurface = TTF_RenderText_Solid(font, str, fontColor);
+    texFont[i] = SDL_CreateTextureFromSurface(renderer, fontSurface);
+  }
+  SDL_FreeSurface(fontSurface);
   SDL_Texture* texBackground = IMG_LoadTexture(renderer,"../data/grass.JPG");  //Load in GPU
   SDL_Texture* texCircle = IMG_LoadTexture(renderer,"../data/circle.PNG");  //Load in GPU
   SDL_Rect rectBackground = { 0, 0, SCREEN_HEIGHT, SCREEN_HEIGHT };
@@ -100,13 +114,17 @@ int main(int argc, char* args[]) {
         );
       }
     }
-
     SDL_Rect rectCircle;
+    SDL_Rect rectFont;
     for(unsigned i=0; i<m.getPoints().size(); i++){
       rectCircle = { m.getPoints().at(i).getX()*SCREEN_HEIGHT/100-CIRCLE_SIZE/2,
                      m.getPoints().at(i).getY()*SCREEN_HEIGHT/100-CIRCLE_SIZE/2,
                      CIRCLE_SIZE, CIRCLE_SIZE};
+      rectFont = {m.getPoints().at(i).getX()*SCREEN_HEIGHT/100 -(FONT_SIZE*(1+(int)i/10))/2 ,
+                  m.getPoints().at(i).getY()*SCREEN_HEIGHT/100 - FONT_SIZE/2,
+                  FONT_SIZE*(1+(int)i/10), FONT_SIZE};
       SDL_RenderCopy(renderer, texCircle, NULL, &rectCircle);
+      SDL_RenderCopy(renderer, texFont[i], NULL, &rectFont);
     }
     SDL_RenderPresent(renderer);
     switch(event.type){
@@ -120,11 +138,15 @@ int main(int argc, char* args[]) {
             break;
     }
   }
+  for(unsigned i=0;i<m.getPoints().size();i++)
+    SDL_DestroyTexture(texFont[i]);
   SDL_DestroyTexture(texCircle);
   SDL_DestroyTexture(texBackground);
+  TTF_CloseFont(font);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   IMG_Quit();
+  TTF_Quit();
   SDL_Quit();
   return 0;
 }
