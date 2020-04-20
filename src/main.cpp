@@ -1,6 +1,5 @@
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <string>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <vector>
@@ -83,8 +82,8 @@ int main(int argc, char* args[]) {
   SDL_Texture* texFont[15];
   SDL_Surface* fontSurface;
   for(unsigned i=0;i<m.getPoints().size();i++){
-    char str[10]; itoa(i, str, 10);
-    fontSurface = TTF_RenderText_Solid(font, str, fontColor);
+    const char* str = std::to_string(i).c_str();
+    fontSurface = TTF_RenderText_Solid(font, str , fontColor);
     texFont[i] = SDL_CreateTextureFromSurface(renderer, fontSurface);
   }
   SDL_FreeSurface(fontSurface);
