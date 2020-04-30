@@ -1,15 +1,7 @@
 #include "map.h"
 
-Map::Map(int nbPoints, int larg, int lon):nbPoints(nbPoints), largeur(larg),longueur(lon){
-	for(int i = 0; i<nbPoints; i++){
-		int x= rand()%lon;
-		int y= rand()%larg;
-		points.push_back(Point(i,x,y));
-		std::cout<<"point x:"<<x<<" y:"<<y<<std::endl;
-	}
-}
 
-Map::Map(std::vector<Point> m,int larg,int lon): points(m),largeur(larg),longueur(lon){
+Map::Map(std::vector<Point> m, int larg,int lon): points(m), largeur(larg),longueur(lon){
 	nbPoints = m.size();
 }
 
@@ -20,22 +12,40 @@ void Map::setPoints(std::vector<Point> m){
 	this->points=m;
 }
 
+std::vector<Voiture> Map::getVoitures(){
+	return this->voitures;
+}
+void Map::setVoitures(std::vector<Voiture> v){
+	this->voitures = v;
+	for(unsigned i =0; i<voitures.size();i++){
+		voitures.at(i).posX = points.at(voitures.at(i).getPointDepart()).getX();
+		voitures.at(i).posY = points.at(voitures.at(i).getPointDepart()).getY();
+		voitures.at(i).itineraire = getItineraireBetween(voitures.at(i).getPointDepart(), voitures.at(i).getPointArrivee());
+	}
+}
+
 int Map::getLargeur(){return this->largeur;}
 int Map::getLongueur(){return this->longueur;}
-void Map::setLargeur(int larg){this->largeur=larg;}
-void Map::setLongueur(int lon){this->longueur= lon;}
 
-void Map::setRoute(int index1, int index2){
+void Map::setRoute(int index1, int index2, int vMin, int vMax){
 	double cost = costForIndexToIndex(index1, index2);
-	points.at(index1).addDestination(index2, cost);
-	points.at(index2).addDestination(index1, cost);
+	points.at(index1).addDestination(index2, cost, vMin, vMax);
+	points.at(index2).addDestination(index1, cost, vMin, vMax);
 }
+
+
+void Map::avancerVoitures(){
+	for(unsigned i=0; i<voitures.size(); i++ ){
+			
+	}
+}
+
+
 
 double Map::costForIndexToIndex(int index1, int index2){
 	return sqrt(pow(points.at(index1).getX()-points.at(index2).getX(),2)+
 							pow(points.at(index1).getY()-points.at(index2).getY(),2));
 }
-
 struct destinationitineraire{
 	int id;
 	double cost;

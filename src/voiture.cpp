@@ -1,8 +1,8 @@
 #include "voiture.h"
 
-Voiture::Voiture(char* name,int pDep,int pAr): nom(name),pointDepart(pDep),pointArrivee(pAr){};
+Voiture::Voiture(string name,int pDep,int pAr): nom(name),pointDepart(pDep),pointArrivee(pAr){};
 
-char* Voiture::getNom(){
+string Voiture::getNom(){
 	return this->nom;
 };
 int Voiture::getPointArrivee(){
@@ -12,7 +12,7 @@ int Voiture::getPointDepart(){
 	return this->pointDepart;
 };
 
-void Voiture::setNom(char* name){
+void Voiture::setNom(string name){
 	this->nom=name;
 };
 void Voiture::setPointArrivee(int pDep){
