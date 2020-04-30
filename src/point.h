@@ -25,6 +25,8 @@ public:
 	void addDestination(int index, double cost, int vMin, int vMax);
 	void addCostForDest(double cost);
 	double getCostForDestIndex(int index);
+	double getVMinForDestIndex(int index);
+	double getVMaxForDestIndex(int index);
 	~Point();
 
 private:

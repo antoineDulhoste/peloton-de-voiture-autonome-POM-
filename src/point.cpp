@@ -24,5 +24,19 @@ double Point::getCostForDestIndex(int index){
 	}
 	return -1;
 }
+double Point::getVMinForDestIndex(int index){
+	for(unsigned i=0;i<destinations.size();i++){
+		if(destinations.at(i).id == index)
+			return destinations.at(i).vMin;
+	}
+	return -1;
+}
+double Point::getVMaxForDestIndex(int index){
+	for(unsigned i=0;i<destinations.size();i++){
+		if(destinations.at(i).id == index)
+			return destinations.at(i).vMax;
+	}
+	return -1;
+}
 
 Point::~Point(){};

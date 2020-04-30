@@ -21,6 +21,7 @@ void Map::setVoitures(std::vector<Voiture> v){
 		voitures.at(i).posX = points.at(voitures.at(i).getPointDepart()).getX();
 		voitures.at(i).posY = points.at(voitures.at(i).getPointDepart()).getY();
 		voitures.at(i).itineraire = getItineraireBetween(voitures.at(i).getPointDepart(), voitures.at(i).getPointArrivee());
+		voitures.at(i).setVitesse(points.at(voitures.at(i).itineraire.at(0)).getVMinForDestIndex(voitures.at(i).itineraire.at(1)));
 	}
 }
 
@@ -35,8 +36,29 @@ void Map::setRoute(int index1, int index2, int vMin, int vMax){
 
 
 void Map::avancerVoitures(){
+	double difX, difY, newX, newY;
 	for(unsigned i=0; i<voitures.size(); i++ ){
-			
+		//avancer le long de leur axe.
+		difX = points.at(voitures.at(i).itineraire.at(1)).getX() - points.at(voitures.at(i).itineraire.at(0)).getX();
+		difY = points.at(voitures.at(i).itineraire.at(1)).getY() - points.at(voitures.at(i).itineraire.at(0)).getY();
+		newX = difX * voitures.at(i).getVitesse() / sqrt(pow(difX,2)+pow(difY,2));
+		newY = difY * voitures.at(i).getVitesse() / sqrt(pow(difX,2)+pow(difY,2));
+		//verifier si le point a été atteint ou dépassé
+		if(((voitures.at(i).posX < points.at(voitures.at(i).itineraire.at(1)).getX() && points.at(voitures.at(i).itineraire.at(1)).getX() <= voitures.at(i).posX+newX)
+			||(voitures.at(i).posX > points.at(voitures.at(i).itineraire.at(1)).getX() && points.at(voitures.at(i).itineraire.at(1)).getX() >= voitures.at(i).posX+newX))
+		 ||((voitures.at(i).posY < points.at(voitures.at(i).itineraire.at(1)).getY() && points.at(voitures.at(i).itineraire.at(1)).getY() <= voitures.at(i).posY+newY)
+			||(voitures.at(i).posY > points.at(voitures.at(i).itineraire.at(1)).getY() && points.at(voitures.at(i).itineraire.at(1)).getY() >= voitures.at(i).posY+newY))){
+			//passer a la prochaine destination de l'itinéraire
+			if(voitures.at(i).itineraire.size()>2){	//si il reste au moins 2 ID dans la liste, il y a encore des points parcourir
+				voitures.at(i).posX = points.at(voitures.at(i).itineraire.at(1)).getX();	//ajustement des décalages du aux arrondis
+				voitures.at(i).posY = points.at(voitures.at(i).itineraire.at(1)).getY();	//ajustement des décalages du aux arrondis
+				voitures.at(i).itineraire.erase(voitures.at(i).itineraire.begin());
+			}
+		}
+		else{	//sinon continuer a avancer
+			voitures.at(i).posX += newX;
+			voitures.at(i).posY += newY;
+		}
 	}
 }
 

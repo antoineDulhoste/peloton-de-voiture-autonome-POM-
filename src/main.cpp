@@ -38,30 +38,30 @@ int main(int argc, char* args[]) {
 	points.push_back(Point(13,54,94));
 	points.push_back(Point(14,18,60));
   Map m(points, 100,100);
-  m.setRoute(0, 1, 10,20);
-  m.setRoute(0, 2, 10, 20);
-  m.setRoute(0, 3, 10, 20);
-  m.setRoute(0, 6, 10, 20);
-  m.setRoute(0, 7, 10, 20);
-  m.setRoute(0, 11, 10, 20);
-  m.setRoute(0, 12, 10, 20);
-  m.setRoute(1, 12, 10, 20);
-  m.setRoute(1, 6, 10, 20);
-  m.setRoute(2, 6, 10, 20);
-  m.setRoute(3, 7, 10, 20);
-  m.setRoute(3, 8, 10, 20);
-  m.setRoute(3, 13, 10, 20);
-  m.setRoute(3, 11, 10, 20);
-  m.setRoute(3, 14, 10, 20);
-  m.setRoute(4, 10, 10, 20);
-  m.setRoute(4, 7, 10, 20);
-  m.setRoute(4, 8, 10, 20);
-  m.setRoute(4, 8, 10, 20);
-  m.setRoute(5, 9, 10, 20);
-  m.setRoute(5, 14, 10, 20);
-  m.setRoute(7, 8, 10, 20);
-  m.setRoute(8, 13, 10, 20);
-  m.setRoute(11, 14, 10, 20);
+  m.setRoute(0, 1, 1, 5);
+  m.setRoute(0, 2, 1, 5);
+  m.setRoute(0, 3, 1, 5);
+  m.setRoute(0, 6, 1, 5);
+  m.setRoute(0, 7, 1, 5);
+  m.setRoute(0, 11, 1, 5);
+  m.setRoute(0, 12, 1, 5);
+  m.setRoute(1, 12, 1, 5);
+  m.setRoute(1, 6, 1, 5);
+  m.setRoute(2, 6, 1, 5);
+  m.setRoute(3, 7, 1, 5);
+  m.setRoute(3, 8, 1, 5);
+  m.setRoute(3, 13, 1, 5);
+  m.setRoute(3, 11, 1, 5);
+  m.setRoute(3, 14, 1, 5);
+  m.setRoute(4, 10, 1, 5);
+  m.setRoute(4, 7, 1, 5);
+  m.setRoute(4, 8, 1, 5);
+  m.setRoute(4, 8, 1, 5);
+  m.setRoute(5, 9, 1, 5);
+  m.setRoute(5, 14, 1, 5);
+  m.setRoute(7, 8, 1, 5);
+  m.setRoute(8, 13, 1, 5);
+  m.setRoute(11, 14, 1, 5);
 
   std::vector<Voiture> voitures;
   voitures.push_back(Voiture("v1",9,6));
@@ -142,8 +142,8 @@ int main(int argc, char* args[]) {
       }
       SDL_Rect rectCar;
       for(unsigned i=0; i<m.getVoitures().size(); i++){  //affichage des groupes de voitures
-        rectCar = { m.getVoitures().at(i).posX*SCREEN_HEIGHT/100-CAR_SIZE/2,
-                       m.getVoitures().at(i).posY*SCREEN_HEIGHT/100-CAR_SIZE/2,
+        rectCar = { (int)m.getVoitures().at(i).posX*SCREEN_HEIGHT/100-CAR_SIZE/2,
+                       (int)m.getVoitures().at(i).posY*SCREEN_HEIGHT/100-CAR_SIZE/2,
                        CAR_SIZE, CAR_SIZE};
         SDL_RenderCopy(renderer, texCar, NULL, &rectCar);
       }
@@ -153,6 +153,7 @@ int main(int argc, char* args[]) {
       //evolution des entites
       m.avancerVoitures();
     }
+
     switch(event.type){
         case SDL_QUIT: // Clic sur la croix
             quit=1;
