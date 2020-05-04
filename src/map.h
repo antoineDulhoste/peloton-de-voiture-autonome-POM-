@@ -23,9 +23,8 @@ public:
 
 	int getLargeur();
 	int getLongueur();
-	void setRoute(int index1, int index2, int vMin, int vMax);
+	void setRoute(int index1, int index2, double vMin, double vMax);
 
-	int getPointPos(int index, char xORy);
 	std::vector<int> getItineraireBetween(int indexDepart, int indexArrivee);
 
 	void avancerVoitures();

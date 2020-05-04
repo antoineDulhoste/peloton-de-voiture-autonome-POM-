@@ -7,8 +7,8 @@
 struct destination{
 	int id;
 	double cost;
-	int vMin;
-	int vMax;
+	double vMin;
+	double vMax;
 };
 
 class Point
@@ -22,7 +22,7 @@ public:
 	void setY(int y);
 	void setId(int id);
 	std::vector<destination> getDestinations();
-	void addDestination(int index, double cost, int vMin, int vMax);
+	void addDestination(int index, double cost, double vMin, double vMax);
 	void addCostForDest(double cost);
 	double getCostForDestIndex(int index);
 	double getVMinForDestIndex(int index);

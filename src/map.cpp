@@ -28,7 +28,7 @@ void Map::setVoitures(std::vector<Voiture> v){
 int Map::getLargeur(){return this->largeur;}
 int Map::getLongueur(){return this->longueur;}
 
-void Map::setRoute(int index1, int index2, int vMin, int vMax){
+void Map::setRoute(int index1, int index2, double vMin, double vMax){
 	double cost = costForIndexToIndex(index1, index2);
 	points.at(index1).addDestination(index2, cost, vMin, vMax);
 	points.at(index2).addDestination(index1, cost, vMin, vMax);
@@ -53,6 +53,8 @@ void Map::avancerVoitures(){
 				voitures.at(i).posX = points.at(voitures.at(i).itineraire.at(1)).getX();	//ajustement des décalages du aux arrondis
 				voitures.at(i).posY = points.at(voitures.at(i).itineraire.at(1)).getY();	//ajustement des décalages du aux arrondis
 				voitures.at(i).itineraire.erase(voitures.at(i).itineraire.begin());
+				//recuperer nouvelle vitesse
+				//verifier peloton
 			}
 		}
 		else{	//sinon continuer a avancer

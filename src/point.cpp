@@ -12,7 +12,7 @@ void Point::setId(int id){this->id=id;}
 std::vector<destination> Point::getDestinations(){
 	return destinations;
 }
-void Point::addDestination(int index, double cost, int vMin, int vMax){
+void Point::addDestination(int index, double cost, double vMin, double vMax){
 	destination dest = {index, cost, vMin, vMax};
 	destinations.push_back(dest);
 }
