@@ -29,7 +29,7 @@ public:
 	void setRoute(int index1, int index2, double vMin, double vMax);
 
 	std::vector<int> getItineraireBetween(int indexDepart, int indexArrivee);
-
+	Voiture * getVoitureFromPeloton(string name);
 	void avancerPelotons();
 
 	~Map();
@@ -43,7 +43,6 @@ private:
 	int largeur;
 	int longueur;
 	double costForIndexToIndex(int index1, int index2);
-	Voiture * getVoitureFromPeloton(string name);
 };
 
 #endif

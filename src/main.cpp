@@ -9,8 +9,10 @@
 #include <math.h>
 using namespace std;
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 800
+#define MAP_WIDTH 100
+#define MAP_HEIGHT 100
 #define CIRCLE_SIZE 20
 #define FONT_SIZE 20
 #define CAR_SIZE 40
@@ -37,7 +39,7 @@ int main(int argc, char* args[]) {
 	points.push_back(Point(12,24,17));
 	points.push_back(Point(13,54,94));
 	points.push_back(Point(14,18,60));
-  Map m(points, 100,100);
+  Map m(points, MAP_WIDTH,MAP_HEIGHT);
   m.setRoute(0, 1, 1, 5);
   m.setRoute(0, 2, 1, 5);
   m.setRoute(0, 3, 1, 5);
@@ -57,7 +59,7 @@ int main(int argc, char* args[]) {
   m.setRoute(4, 7, 1, 5);
   m.setRoute(4, 8, 1, 5);
   m.setRoute(4, 8, 1, 5);
-  m.setRoute(5, 9, 0.1, 5);
+  m.setRoute(5, 9, 1, 5);
   m.setRoute(5, 14, 1, 5);
   m.setRoute(7, 8, 1, 5);
   m.setRoute(8, 13, 1, 5);
@@ -66,15 +68,15 @@ int main(int argc, char* args[]) {
   std::vector<Voiture> voitures;
   voitures.push_back(Voiture("v1",9,1));
   voitures.push_back(Voiture("v2",1,9));
-  /*voitures.push_back(Voiture("v3",1,13));
-  voitures.push_back(Voiture("v4",6,7));
+  voitures.push_back(Voiture("v3",1,9));
+  /*voitures.push_back(Voiture("v4",6,7));
   voitures.push_back(Voiture("v5",11,1));*/
   m.setVoitures(voitures);
 
   std::vector<Peloton> pelotons;
   std::vector<string> p0; p0.push_back("v1");
   pelotons.push_back(Peloton(p0.at(0), p0));
-  std::vector<string> p1; p1.push_back("v2");
+  std::vector<string> p1; p1.push_back("v2"); p1.push_back("v3");
   pelotons.push_back(Peloton(p1.at(0), p1));
   m.setPelotons(pelotons);
 
@@ -100,7 +102,7 @@ int main(int argc, char* args[]) {
 
   TTF_Font * font = TTF_OpenFont("../data/Aller_Bd.ttf", 25);
   SDL_Color fontColor = { 0, 0, 0 };
-  SDL_Texture* texFont[15];
+  SDL_Texture* texFont[m.getPoints().size()];
   SDL_Surface* fontSurface;
   for(unsigned i=0;i<m.getPoints().size();i++){
     const char* str = std::to_string(i).c_str();
@@ -131,30 +133,39 @@ int main(int argc, char* args[]) {
       for(unsigned i=0; i<m.getPoints().size();i++){      //affichage des routes
         for(unsigned j=0; j<m.getPoints().at(i).getDestinations().size(); j++){
           SDL_RenderDrawLine(renderer,
-                            m.getPoints().at(i).getX()*SCREEN_HEIGHT/100,
-                            m.getPoints().at(i).getY()*SCREEN_HEIGHT/100,
-                            m.getPoints().at(m.getPoints().at(i).getDestinations().at(j).id).getX()*SCREEN_HEIGHT/100,
-                            m.getPoints().at(m.getPoints().at(i).getDestinations().at(j).id).getY()*SCREEN_HEIGHT/100);
+                            m.getPoints().at(i).getX()*SCREEN_HEIGHT/MAP_WIDTH,
+                            m.getPoints().at(i).getY()*SCREEN_HEIGHT/MAP_HEIGHT,
+                            m.getPoints().at(m.getPoints().at(i).getDestinations().at(j).id).getX()*SCREEN_HEIGHT/MAP_WIDTH,
+                            m.getPoints().at(m.getPoints().at(i).getDestinations().at(j).id).getY()*SCREEN_HEIGHT/MAP_HEIGHT);
         }
       }
       SDL_Rect rectCircle;
       SDL_Rect rectFont;
       for(unsigned i=0; i<m.getPoints().size(); i++){     //affichage des points
-        rectCircle = { m.getPoints().at(i).getX()*SCREEN_HEIGHT/100-CIRCLE_SIZE/2,
-                       m.getPoints().at(i).getY()*SCREEN_HEIGHT/100-CIRCLE_SIZE/2,
+        rectCircle = { m.getPoints().at(i).getX()*SCREEN_HEIGHT/MAP_WIDTH-CIRCLE_SIZE/2,
+                       m.getPoints().at(i).getY()*SCREEN_HEIGHT/MAP_HEIGHT-CIRCLE_SIZE/2,
                        CIRCLE_SIZE, CIRCLE_SIZE};
-        rectFont = {m.getPoints().at(i).getX()*SCREEN_HEIGHT/100 -(FONT_SIZE*(1+(int)i/10))/2 ,
-                    m.getPoints().at(i).getY()*SCREEN_HEIGHT/100 - FONT_SIZE/2,
+        rectFont = {m.getPoints().at(i).getX()*SCREEN_HEIGHT/MAP_WIDTH -(FONT_SIZE*(1+(int)i/10))/2 ,
+                    m.getPoints().at(i).getY()*SCREEN_HEIGHT/MAP_HEIGHT - FONT_SIZE/2,
                     FONT_SIZE*(1+(int)i/10), FONT_SIZE};
         SDL_RenderCopy(renderer, texCircle, NULL, &rectCircle);
         SDL_RenderCopy(renderer, texFont[i], NULL, &rectFont);
       }
       SDL_Rect rectCar;
-      for(unsigned i=0; i<m.getVoitures().size(); i++){  //affichage des groupes de voitures
-        rectCar = { (int)m.getVoitures().at(i).posX*SCREEN_HEIGHT/100-CAR_SIZE/2,
-                       (int)m.getVoitures().at(i).posY*SCREEN_HEIGHT/100-CAR_SIZE/2,
-                       CAR_SIZE, CAR_SIZE};
+      SDL_Texture* cartexFont;
+      for(unsigned i=0; i<m.getPelotons().size(); i++){  //affichage des pelotons
+        const char* str = std::to_string(m.getPelotons().at(i).getPeloton().size()).c_str();
+        fontSurface = TTF_RenderText_Solid(font, str , fontColor);
+        cartexFont = SDL_CreateTextureFromSurface(renderer, fontSurface);
+        Voiture * Leader = m.getVoitureFromPeloton(m.getPelotons().at(i).getLeader());
+        rectCar = { (int)Leader->posX*SCREEN_HEIGHT/MAP_WIDTH-CAR_SIZE/2,
+                    (int)Leader->posY*SCREEN_HEIGHT/MAP_HEIGHT-CAR_SIZE/2,
+                    CAR_SIZE, CAR_SIZE};
+        rectFont ={ (int)Leader->posX*SCREEN_HEIGHT/MAP_WIDTH-FONT_SIZE/2 + (int)(CAR_SIZE*0.75),
+                    (int)Leader->posY*SCREEN_HEIGHT/MAP_HEIGHT-FONT_SIZE/2 - (int)(CAR_SIZE*0.75),
+                    FONT_SIZE*(1+(int)m.getPelotons().at(i).getPeloton().size()/10), FONT_SIZE};
         SDL_RenderCopy(renderer, texCar, NULL, &rectCar);
+        SDL_RenderCopy(renderer, cartexFont, NULL, &rectFont);
       }
 
       SDL_RenderPresent(renderer);

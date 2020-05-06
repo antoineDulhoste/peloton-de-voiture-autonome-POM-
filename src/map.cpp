@@ -65,13 +65,13 @@ void Map::avancerPelotons(){
 		 ||((currentLeader->posY < points.at(currentLeader->itineraire.at(1)).getY() && points.at(currentLeader->itineraire.at(1)).getY() <= currentLeader->posY+newY)
 			||(currentLeader->posY > points.at(currentLeader->itineraire.at(1)).getY() && points.at(currentLeader->itineraire.at(1)).getY() >= currentLeader->posY+newY))){
 			//passer a la prochaine destination de l'itinéraire
-			if(currentLeader->itineraire.size()>2){	//si il reste au moins 2 ID dans la liste, il y a encore des points parcourir
-				for(unsigned j=0; j<pelotons.at(j).getPeloton().size(); j++){
-					Voiture * currentV = getVoitureFromPeloton(pelotons.at(i).getPeloton().at(j));
-					currentV->posX = points.at(currentV->itineraire.at(1)).getX();	//ajustement des décalages du aux arrondis
-					currentV->posY = points.at(currentV->itineraire.at(1)).getY();	//ajustement des décalages du aux arrondis
-					currentV->itineraire.erase(currentV->itineraire.begin());
-					currentV->setVitesse(points.at(currentV->itineraire.at(0)).getVMinForDestIndex(currentV->itineraire.at(1)));
+			for(unsigned j=0; j<pelotons.at(i).getPeloton().size(); j++){
+				Voiture * currentV = getVoitureFromPeloton(pelotons.at(i).getPeloton().at(j));
+				if(currentV->itineraire.size()>2){	//si il reste au moins 2 ID dans la liste, il y a encore des points parcourir
+						currentV->posX = points.at(currentV->itineraire.at(1)).getX();	//ajustement des décalages du aux arrondis
+						currentV->posY = points.at(currentV->itineraire.at(1)).getY();	//ajustement des décalages du aux arrondis
+						currentV->itineraire.erase(currentV->itineraire.begin());
+						currentV->setVitesse(points.at(currentV->itineraire.at(0)).getVMinForDestIndex(currentV->itineraire.at(1)));
 				}
 				//verifier peloton
 			}
