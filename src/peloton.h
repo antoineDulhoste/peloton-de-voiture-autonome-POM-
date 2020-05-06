@@ -1,23 +1,27 @@
 #ifndef PELOTON_H
 #define PELOTON_H
 
+#include "voiture.h"
 #include <vector>
 #include <iostream>
-#include "voiture.h"
 
 class Peloton
 {
 public:
-  Peloton(Voiture v);
-  Peloton(std::vector<Voiture>  v);
+  Peloton(string idLead);
+  Peloton(string idLead, std::vector<string> peloton);
 
-  string getLeaderNom();
-  void setLeaderNom(string nom);
-  std::vector<Voiture> getPeloton();
-  void setPeloton(std::vector<Voiture> p);
+  string getLeader();
+  void setLeader(string v);
+  std::vector<string> getPeloton();
+  void setPeloton(std::vector<string> p);
+
+  void addElement(string v);
+  void removeElement(string v);
 
 private:
-  string leaderNom;
-  std::vector<Voiture> peloton;
+  string leader;
+  std::vector<string> peloton;
 };
+
 #endif

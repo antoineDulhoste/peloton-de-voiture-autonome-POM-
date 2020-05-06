@@ -25,6 +25,22 @@ void Map::setVoitures(std::vector<Voiture> v){
 	}
 }
 
+std::vector<Peloton> Map::getPelotons(){
+	return this->pelotons;
+}
+void Map::setPelotons(std::vector<Peloton> p){
+	this->pelotons=p;
+}
+
+Voiture * Map::getVoitureFromPeloton(string name){
+	for(unsigned i=0;i<voitures.size();i++){
+		if(voitures.at(i).getNom() == name)
+			return &voitures.data()[i];
+	}
+	std::cout<<"Peloton::getVoitureFromPeloton(string name) error: no corresponding voiture found. Make sure you didnt misspell name";
+	return nullptr;
+}
+
 int Map::getLargeur(){return this->largeur;}
 int Map::getLongueur(){return this->longueur;}
 
@@ -34,36 +50,41 @@ void Map::setRoute(int index1, int index2, double vMin, double vMax){
 	points.at(index2).addDestination(index1, cost, vMin, vMax);
 }
 
-
-void Map::avancerVoitures(){
+void Map::avancerPelotons(){
 	double difX, difY, newX, newY;
-	for(unsigned i=0; i<voitures.size(); i++ ){
-		//avancer le long de leur axe.
-		difX = points.at(voitures.at(i).itineraire.at(1)).getX() - points.at(voitures.at(i).itineraire.at(0)).getX();
-		difY = points.at(voitures.at(i).itineraire.at(1)).getY() - points.at(voitures.at(i).itineraire.at(0)).getY();
-		newX = difX * voitures.at(i).getVitesse() / sqrt(pow(difX,2)+pow(difY,2));
-		newY = difY * voitures.at(i).getVitesse() / sqrt(pow(difX,2)+pow(difY,2));
+	for(unsigned i=0; i<pelotons.size(); i++ ){
+		Voiture * currentLeader = getVoitureFromPeloton(pelotons.at(i).getLeader());
+		//avancer le long de leur axe d'après les positions du leader
+		difX = points.at(currentLeader->itineraire.at(1)).getX() - points.at(currentLeader->itineraire.at(0)).getX();
+		difY = points.at(currentLeader->itineraire.at(1)).getY() - points.at(currentLeader->itineraire.at(0)).getY();
+		newX = difX * currentLeader->getVitesse() / sqrt(pow(difX,2)+pow(difY,2));
+		newY = difY * currentLeader->getVitesse() / sqrt(pow(difX,2)+pow(difY,2));
 		//verifier si le point a été atteint ou dépassé
-		if(((voitures.at(i).posX < points.at(voitures.at(i).itineraire.at(1)).getX() && points.at(voitures.at(i).itineraire.at(1)).getX() <= voitures.at(i).posX+newX)
-			||(voitures.at(i).posX > points.at(voitures.at(i).itineraire.at(1)).getX() && points.at(voitures.at(i).itineraire.at(1)).getX() >= voitures.at(i).posX+newX))
-		 ||((voitures.at(i).posY < points.at(voitures.at(i).itineraire.at(1)).getY() && points.at(voitures.at(i).itineraire.at(1)).getY() <= voitures.at(i).posY+newY)
-			||(voitures.at(i).posY > points.at(voitures.at(i).itineraire.at(1)).getY() && points.at(voitures.at(i).itineraire.at(1)).getY() >= voitures.at(i).posY+newY))){
+		if(((currentLeader->posX < points.at(currentLeader->itineraire.at(1)).getX() && points.at(currentLeader->itineraire.at(1)).getX() <= currentLeader->posX+newX)
+			||(currentLeader->posX > points.at(currentLeader->itineraire.at(1)).getX() && points.at(currentLeader->itineraire.at(1)).getX() >= currentLeader->posX+newX))
+		 ||((currentLeader->posY < points.at(currentLeader->itineraire.at(1)).getY() && points.at(currentLeader->itineraire.at(1)).getY() <= currentLeader->posY+newY)
+			||(currentLeader->posY > points.at(currentLeader->itineraire.at(1)).getY() && points.at(currentLeader->itineraire.at(1)).getY() >= currentLeader->posY+newY))){
 			//passer a la prochaine destination de l'itinéraire
-			if(voitures.at(i).itineraire.size()>2){	//si il reste au moins 2 ID dans la liste, il y a encore des points parcourir
-				voitures.at(i).posX = points.at(voitures.at(i).itineraire.at(1)).getX();	//ajustement des décalages du aux arrondis
-				voitures.at(i).posY = points.at(voitures.at(i).itineraire.at(1)).getY();	//ajustement des décalages du aux arrondis
-				voitures.at(i).itineraire.erase(voitures.at(i).itineraire.begin());
-				//recuperer nouvelle vitesse
+			if(currentLeader->itineraire.size()>2){	//si il reste au moins 2 ID dans la liste, il y a encore des points parcourir
+				for(unsigned j=0; j<pelotons.at(j).getPeloton().size(); j++){
+					Voiture * currentV = getVoitureFromPeloton(pelotons.at(i).getPeloton().at(j));
+					currentV->posX = points.at(currentV->itineraire.at(1)).getX();	//ajustement des décalages du aux arrondis
+					currentV->posY = points.at(currentV->itineraire.at(1)).getY();	//ajustement des décalages du aux arrondis
+					currentV->itineraire.erase(currentV->itineraire.begin());
+					currentV->setVitesse(points.at(currentV->itineraire.at(0)).getVMinForDestIndex(currentV->itineraire.at(1)));
+				}
 				//verifier peloton
 			}
 		}
 		else{	//sinon continuer a avancer
-			voitures.at(i).posX += newX;
-			voitures.at(i).posY += newY;
+			for(unsigned j=0; j<pelotons.at(i).getPeloton().size(); j++){
+				Voiture * currentV = getVoitureFromPeloton(pelotons.at(i).getPeloton().at(j));
+				currentV->posX += newX;
+				currentV->posY += newY;
+			}
 		}
 	}
 }
-
 
 
 double Map::costForIndexToIndex(int index1, int index2){

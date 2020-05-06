@@ -1,30 +1,40 @@
 #include "peloton.h"
 
-Peloton::Peloton(Voiture v){
-  std::vector<Voiture> vec;
-  vec.push_back(v);
-  this->peloton = vec;
+Peloton::Peloton(string idLead): leader(idLead){
+  peloton.push_back(idLead);
 }
-Peloton::Peloton(std::vector<Voiture> v){
-  this->peloton = v;
-}
+Peloton::Peloton(string lead, std::vector<string> peloton): leader(lead), peloton(peloton){}
 
-string Peloton::getLeaderNom(){
-  return leaderNom;
+
+string Peloton::getLeader(){
+  return leader;
 }
-void Peloton::setLeaderNom(string nom){
+void Peloton::setLeader(string v){
   for(unsigned i=0; i<peloton.size();i++){
-    if(peloton.at(i).getNom() == nom){
-      leaderNom=nom;
+    if(peloton.at(i) == v){
+      leader=v;
       break;
     }
   }
-  std::cout<<"Peloton::setLeaderNom(string nom) error: no corresponding name found.";
+  std::cout<<"Peloton::setLeader(string v) error: no corresponding voiture found. Make sure you didnt misspell name";
 }
 
-std::vector<Voiture> Peloton::getPeloton(){
+std::vector<string> Peloton::getPeloton(){
   return peloton;
 }
-void Peloton::setPeloton(std::vector<Voiture> p){
+void Peloton::setPeloton(std::vector<string> p){
   this->peloton = p;
+}
+
+void Peloton::addElement(string v){
+  peloton.push_back(v);
+}
+
+void Peloton::removeElement(string v){
+  for(unsigned i=0; i<peloton.size();i++){
+    if(peloton.at(i)== v){
+      peloton.erase(peloton.begin()+i);
+      return;
+    }
+  }
 }

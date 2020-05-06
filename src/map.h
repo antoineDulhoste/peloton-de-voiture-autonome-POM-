@@ -21,25 +21,29 @@ public:
 	std::vector<Voiture> getVoitures();
 	void setVoitures(std::vector<Voiture> v);
 
+	std::vector<Peloton> getPelotons();
+	void setPelotons(std::vector<Peloton> v);
+
 	int getLargeur();
 	int getLongueur();
 	void setRoute(int index1, int index2, double vMin, double vMax);
 
 	std::vector<int> getItineraireBetween(int indexDepart, int indexArrivee);
 
-	void avancerVoitures();
-
+	void avancerPelotons();
 
 	~Map();
 
-	std::vector<Peloton> pelotons;
+
 private:
 	std::vector<Point> points;
 	std::vector<Voiture> voitures;
+	std::vector<Peloton> pelotons;
 	int nbPoints;
 	int largeur;
 	int longueur;
 	double costForIndexToIndex(int index1, int index2);
+	Voiture * getVoitureFromPeloton(string name);
 };
 
 #endif

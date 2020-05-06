@@ -57,7 +57,7 @@ int main(int argc, char* args[]) {
   m.setRoute(4, 7, 1, 5);
   m.setRoute(4, 8, 1, 5);
   m.setRoute(4, 8, 1, 5);
-  m.setRoute(5, 9, 1, 5);
+  m.setRoute(5, 9, 0.1, 5);
   m.setRoute(5, 14, 1, 5);
   m.setRoute(7, 8, 1, 5);
   m.setRoute(8, 13, 1, 5);
@@ -65,13 +65,18 @@ int main(int argc, char* args[]) {
 
   std::vector<Voiture> voitures;
   voitures.push_back(Voiture("v1",9,1));
-  voitures.push_back(Voiture("v2",2,9));
+  voitures.push_back(Voiture("v2",1,9));
   /*voitures.push_back(Voiture("v3",1,13));
   voitures.push_back(Voiture("v4",6,7));
   voitures.push_back(Voiture("v5",11,1));*/
   m.setVoitures(voitures);
 
-  m.pelotons.push_back(Peloton(voitures));
+  std::vector<Peloton> pelotons;
+  std::vector<string> p0; p0.push_back("v1");
+  pelotons.push_back(Peloton(p0.at(0), p0));
+  std::vector<string> p1; p1.push_back("v2");
+  pelotons.push_back(Peloton(p1.at(0), p1));
+  m.setPelotons(pelotons);
 
   for(unsigned i=0;i<m.getVoitures().size();i++){
     std::cout<<"voiture n."<<i<<": ";
@@ -155,7 +160,7 @@ int main(int argc, char* args[]) {
       SDL_RenderPresent(renderer);
 
       //evolution des entites
-      m.avancerVoitures();
+      m.avancerPelotons();
     }
 
     switch(event.type){
