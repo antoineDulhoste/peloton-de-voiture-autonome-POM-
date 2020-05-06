@@ -57,19 +57,21 @@ int main(int argc, char* args[]) {
   m.setRoute(4, 7, 1, 5);
   m.setRoute(4, 8, 1, 5);
   m.setRoute(4, 8, 1, 5);
-  m.setRoute(5, 9, 0.1, 5);
+  m.setRoute(5, 9, 1, 5);
   m.setRoute(5, 14, 1, 5);
   m.setRoute(7, 8, 1, 5);
   m.setRoute(8, 13, 1, 5);
   m.setRoute(11, 14, 1, 5);
 
   std::vector<Voiture> voitures;
-  voitures.push_back(Voiture("v1",9,10));
-  voitures.push_back(Voiture("v2",5,0));
+  voitures.push_back(Voiture("v1",9,1));
+  voitures.push_back(Voiture("v2",2,9));
   /*voitures.push_back(Voiture("v3",1,13));
   voitures.push_back(Voiture("v4",6,7));
   voitures.push_back(Voiture("v5",11,1));*/
   m.setVoitures(voitures);
+
+  m.pelotons.push_back(Peloton(voitures));
 
   for(unsigned i=0;i<m.getVoitures().size();i++){
     std::cout<<"voiture n."<<i<<": ";

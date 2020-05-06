@@ -1,14 +1,14 @@
+#ifndef MAP_H
+#define MAP_H
+
 #include "point.h"
-#include "voiture.h"
+#include "peloton.h"
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
 #include <queue>
 #include <math.h>
 #include <algorithm>
-
-#ifndef MAP_H
-#define MAP_H
 
 class Map
 {
@@ -29,8 +29,10 @@ public:
 
 	void avancerVoitures();
 
+
 	~Map();
 
+	std::vector<Peloton> pelotons;
 private:
 	std::vector<Point> points;
 	std::vector<Voiture> voitures;

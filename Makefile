@@ -15,8 +15,8 @@ clean:
 
 
 
-release/main.exe: obj/main.o obj/voiture.o obj/point.o obj/map.o
-	$(WIN32)g++ -Wall obj/main.o obj/voiture.o obj/point.o obj/map.o $(SDL2ARGS) $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -o release/main.exe
+release/main.exe: obj/main.o obj/voiture.o obj/point.o obj/map.o obj/peloton.o
+	$(WIN32)g++ -Wall obj/main.o obj/voiture.o obj/point.o obj/map.o obj/peloton.o $(SDL2ARGS) $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -o release/main.exe
 
 obj/main.o  : src/main.cpp
 	$(WIN32)g++ -Wall src/main.cpp $(SDL2ARGS) $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -c -o obj/main.o
@@ -29,3 +29,6 @@ obj/point.o : src/point.cpp
 
 obj/map.o : src/map.cpp
 	$(WIN32)g++ -Wall src/map.cpp $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -c -o obj/map.o
+
+obj/peloton.o : src/peloton.cpp
+	$(WIN32)g++ -Wall src/peloton.cpp $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -c -o obj/peloton.o
