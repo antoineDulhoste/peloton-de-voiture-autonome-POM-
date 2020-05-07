@@ -1,9 +1,10 @@
 #ifndef PELOTON_H
 #define PELOTON_H
 
-#include "voiture.h"
 #include <vector>
 #include <iostream>
+#include <string>
+using namespace std;
 
 class Peloton
 {
@@ -16,12 +17,16 @@ public:
   std::vector<string> getPeloton();
   void setPeloton(std::vector<string> p);
 
+  bool getVisible();
+  void setVisible(bool vis);
+
   void addElement(string v);
   void removeElement(string v);
 
 private:
   string leader;
   std::vector<string> peloton;
+  bool visible = true;
 };
 
 #endif

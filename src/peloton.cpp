@@ -26,6 +26,13 @@ void Peloton::setPeloton(std::vector<string> p){
   this->peloton = p;
 }
 
+bool Peloton::getVisible(){
+  return visible;
+}
+void Peloton::setVisible(bool vis){
+  visible = vis;
+}
+
 void Peloton::addElement(string v){
   peloton.push_back(v);
 }

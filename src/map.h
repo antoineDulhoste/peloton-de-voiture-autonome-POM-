@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include "point.h"
+#include "voiture.h"
 #include "peloton.h"
 #include <stdlib.h>
 #include <iostream>
@@ -20,6 +21,7 @@ public:
 
 	std::vector<Voiture> getVoitures();
 	void setVoitures(std::vector<Voiture> v);
+	void addVoiture(string name, int ptDepart, int ptArrive);
 
 	std::vector<Peloton> getPelotons();
 	void setPelotons(std::vector<Peloton> v);
@@ -43,6 +45,7 @@ private:
 	int largeur;
 	int longueur;
 	double costForIndexToIndex(int index1, int index2);
+	bool memePeloton(string n1, string n2);
 };
 
 #endif

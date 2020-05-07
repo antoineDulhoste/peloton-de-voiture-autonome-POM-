@@ -9,14 +9,14 @@
 #include <math.h>
 using namespace std;
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 800
-#define MAP_WIDTH 100
-#define MAP_HEIGHT 100
+#define SCREEN_WIDTH 1000
+#define SCREEN_HEIGHT 1000
+#define MAP_WIDTH 1000
+#define MAP_HEIGHT 1000
 #define CIRCLE_SIZE 20
 #define FONT_SIZE 20
 #define CAR_SIZE 40
-#define TICK_PER_FRAME 100
+#define TICK_PER_FRAME 50
 
 SDL_Window* window = NULL;  //initialize to null to setup renderer and textures before first display
 SDL_Renderer *renderer = NULL;
@@ -24,27 +24,27 @@ SDL_Renderer *renderer = NULL;
 int main(int argc, char* args[]) {
   //srand(93);    //seed random
   std::vector<Point> points;
-  points.push_back(Point(0,42,28));
-  points.push_back(Point(1,47,9));
-  points.push_back(Point(2,76,35));
-	points.push_back(Point(3,42,75));
-  points.push_back(Point(4,84,65));
-  points.push_back(Point(5,8,80));
-  points.push_back(Point(6,69,13));
-	points.push_back(Point(7,57,52));
-  points.push_back(Point(8,63,79));
-	points.push_back(Point(9,6,95));
-	points.push_back(Point(10,96,59));
-	points.push_back(Point(11,27,49));
-	points.push_back(Point(12,24,17));
-	points.push_back(Point(13,54,94));
-	points.push_back(Point(14,18,60));
+  points.push_back(Point(0,420,280));
+  points.push_back(Point(1,470,90));
+  points.push_back(Point(2,760,350));
+	points.push_back(Point(3,420,750));
+  points.push_back(Point(4,840,650));
+  points.push_back(Point(5,80,800));
+  points.push_back(Point(6,690,130));
+	points.push_back(Point(7,570,520));
+  points.push_back(Point(8,630,790));
+	points.push_back(Point(9,60,950));
+	points.push_back(Point(10,960,590));
+	points.push_back(Point(11,270,490));
+	points.push_back(Point(12,240,170));
+	points.push_back(Point(13,540,940));
+	points.push_back(Point(14,180,600));
   Map m(points, MAP_WIDTH,MAP_HEIGHT);
   m.setRoute(0, 1, 1, 5);
   m.setRoute(0, 2, 1, 5);
-  m.setRoute(0, 3, 1, 5);
+  //m.setRoute(0, 3, 1, 5);
   m.setRoute(0, 6, 1, 5);
-  m.setRoute(0, 7, 1, 5);
+  //m.setRoute(0, 7, 1, 5);
   m.setRoute(0, 11, 1, 5);
   m.setRoute(0, 12, 1, 5);
   m.setRoute(1, 12, 1, 5);
@@ -66,22 +66,16 @@ int main(int argc, char* args[]) {
   m.setRoute(11, 14, 1, 5);
 
   std::vector<Voiture> voitures;
-  voitures.push_back(Voiture("v1",9,1));
-  voitures.push_back(Voiture("v2",1,9));
-  voitures.push_back(Voiture("v3",1,9));
-  /*voitures.push_back(Voiture("v4",6,7));
-  voitures.push_back(Voiture("v5",11,1));*/
+  voitures.push_back(Voiture("v1",1,3));
+  voitures.push_back(Voiture("v2",2,9));
+  voitures.push_back(Voiture("v3",12,9));
+  voitures.push_back(Voiture("v4",6,9));
+  voitures.push_back(Voiture("v6",12,8));
+  voitures.push_back(Voiture("v7",5,8));
   m.setVoitures(voitures);
 
-  std::vector<Peloton> pelotons;
-  std::vector<string> p0; p0.push_back("v1");
-  pelotons.push_back(Peloton(p0.at(0), p0));
-  std::vector<string> p1; p1.push_back("v2"); p1.push_back("v3");
-  pelotons.push_back(Peloton(p1.at(0), p1));
-  m.setPelotons(pelotons);
-
   for(unsigned i=0;i<m.getVoitures().size();i++){
-    std::cout<<"voiture n."<<i<<": ";
+    std::cout<< m.getVoitures().at(i).getNom()<<": ";
     for(unsigned j=0;j<m.getVoitures().at(i).itineraire.size();j++){
       std::cout<<m.getVoitures().at(i).itineraire.at(j)<<" ";
     }
@@ -121,11 +115,12 @@ int main(int argc, char* args[]) {
   if (window == NULL) {fprintf(stderr, "could not create window: %s\n", SDL_GetError());return 1;}
 
   bool quit = false;
+  bool pause = false;
   unsigned last_frame_time = 0;
   while(!quit){
     SDL_PollEvent(&event);  // Récupération des actions de l'utilisateur
 
-    if(last_frame_time+TICK_PER_FRAME < SDL_GetTicks()){  //si on doit aficher une nouvelle image
+    if(last_frame_time+TICK_PER_FRAME < SDL_GetTicks() && !pause){  //si on doit aficher une nouvelle image
       last_frame_time += TICK_PER_FRAME;
       SDL_SetRenderDrawColor(renderer,0,0,0,255);
       SDL_RenderClear(renderer);
@@ -178,9 +173,10 @@ int main(int argc, char* args[]) {
         case SDL_QUIT: // Clic sur la croix
             quit=1;
             break;
-        case SDL_KEYUP: // Relâchement d'une touche
-            if ( event.key.keysym.sym == SDLK_f ){ // Touche f
-              cout<<"F"<<endl;
+        case SDL_KEYDOWN: // Appui d'une touche
+            if ( event.key.keysym.sym == SDLK_p ){ // Touche p
+              pause = !pause;
+              last_frame_time = SDL_GetTicks();
             }
             break;
     }
