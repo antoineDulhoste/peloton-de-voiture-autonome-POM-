@@ -7,6 +7,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "map.h"
 #include <math.h>
+#include <stdlib.h> 
 using namespace std;
 
 #define SCREEN_WIDTH 1000
@@ -17,6 +18,7 @@ using namespace std;
 #define FONT_SIZE 20
 #define CAR_SIZE 40
 #define TICK_PER_FRAME 50
+#define NB_VOITURE 20
 
 SDL_Window* window = NULL;  //initialize to null to setup renderer and textures before first display
 SDL_Renderer *renderer = NULL;
@@ -66,14 +68,14 @@ int main(int argc, char* args[]) {
   m.setRoute(11, 14, 1, 5);
 
   std::vector<Voiture> voitures;
-  voitures.push_back(Voiture("v1",1,3));
+  /*voitures.push_back(Voiture("v1",1,9));
   voitures.push_back(Voiture("v2",2,9));
   voitures.push_back(Voiture("v3",12,9));
   voitures.push_back(Voiture("v4",6,9));
   voitures.push_back(Voiture("v5",2,10));
   voitures.push_back(Voiture("v6",12,8));
   voitures.push_back(Voiture("v7",5,8));
-  m.setVoitures(voitures);
+  
 
   for(unsigned i=0;i<m.getVoitures().size();i++){
     std::cout<< m.getVoitures().at(i).getNom()<<": ";
@@ -81,9 +83,13 @@ int main(int argc, char* args[]) {
       std::cout<<m.getVoitures().at(i).itineraire.at(j)<<" ";
     }
     std::cout<<std::endl;
+  }*/
+
+  for(unsigned i=0;i<NB_VOITURE;i++){
+  	voitures.push_back(Voiture(to_string(i),rand() % 15,rand() % 15));
   }
 
-
+  m.setVoitures(voitures);
 
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());return 1;}
   if (TTF_Init() < 0) {fprintf(stderr, "could not initialize sdl2_ttf: %s\n", TTF_GetError());return 1;}

@@ -18,26 +18,36 @@ std::vector<Voiture> Map::getVoitures(){
 void Map::setVoitures(std::vector<Voiture> v){
 	this->voitures = v;
 	for(unsigned i =0; i<voitures.size();i++){
+		if(voitures.at(i).getPointDepart()==voitures.at(i).getPointArrivee()){
+			voitures.at(i).setPointDepart(1);
+			voitures.at(i).setPointArrivee(9);
+		}	
 		voitures.at(i).posX = points.at(voitures.at(i).getPointDepart()).getX();
 		voitures.at(i).posY = points.at(voitures.at(i).getPointDepart()).getY();
 		voitures.at(i).itineraire = getItineraireBetween(voitures.at(i).getPointDepart(), voitures.at(i).getPointArrivee());
 		voitures.at(i).setVitesse((points.at(voitures.at(i).itineraire.at(0)).getVMinForDestIndex(voitures.at(i).itineraire.at(1)) +
-												 			 points.at(voitures.at(i).itineraire.at(0)).getVMaxForDestIndex(voitures.at(i).itineraire.at(1))) /2); //se met a la vitesse moyenne
+											 			 points.at(voitures.at(i).itineraire.at(0)).getVMaxForDestIndex(voitures.at(i).itineraire.at(1))) /2); //se met a la vitesse moyenne
 		std::vector<string> p;
 		p.push_back(voitures.at(i).getNom());
 		pelotons.push_back(Peloton(p.at(0), p));
+
 	}
 }
 void Map::addVoiture(string name, int ptDepart, int ptArrive){
-	voitures.push_back(Voiture(name, ptDepart, ptArrive));
-	voitures.at(voitures.size()-1).posX = points.at(ptDepart).getX();
-	voitures.at(voitures.size()-1).posY = points.at(ptDepart).getY();
-	voitures.at(voitures.size()-1).itineraire = getItineraireBetween(ptDepart, ptArrive);
-	voitures.at(voitures.size()-1).setVitesse((points.at(voitures.at(voitures.size()-1).itineraire.at(0)).getVMinForDestIndex(voitures.at(voitures.size()-1).itineraire.at(1)) +
-														 points.at(voitures.at(voitures.size()-1).itineraire.at(0)).getVMaxForDestIndex(voitures.at(voitures.size()-1).itineraire.at(1))) /2);
-	std::vector<string> p;
-	p.push_back(voitures.at(voitures.size()-1).getNom());
-	pelotons.push_back(Peloton(p.at(0), p));
+	if(ptDepart==ptArrive){
+			addVoiture(name,rand() % 15,rand() % 15);
+	}else{
+		voitures.push_back(Voiture(name, ptDepart, ptArrive));
+		voitures.at(voitures.size()-1).posX = points.at(ptDepart).getX();
+		voitures.at(voitures.size()-1).posY = points.at(ptDepart).getY();
+		voitures.at(voitures.size()-1).itineraire = getItineraireBetween(ptDepart, ptArrive);
+		voitures.at(voitures.size()-1).setVitesse((points.at(voitures.at(voitures.size()-1).itineraire.at(0)).getVMinForDestIndex(voitures.at(voitures.size()-1).itineraire.at(1)) +
+															 points.at(voitures.at(voitures.size()-1).itineraire.at(0)).getVMaxForDestIndex(voitures.at(voitures.size()-1).itineraire.at(1))) /2);
+		std::vector<string> p;
+		p.push_back(voitures.at(voitures.size()-1).getNom());
+		pelotons.push_back(Peloton(p.at(0), p));
+	}
+	
 }
 
 std::vector<Peloton> Map::getPelotons(){
@@ -104,14 +114,14 @@ void Map::avancerPelotons(){
 					}
 				}
 				else{
-					int ptArriv = currentV->getPointArrivee();
-					int ptDepart= currentV->getPointDepart();
+					//int ptArriv = currentV->getPointArrivee();
+					//int ptDepart= currentV->getPointDepart();
 					string nom = currentV->getNom();
 					for(unsigned k=0;k<voitures.size();k++){
 						if(voitures.at(k).getNom() == currentV->getNom())
 							voitures.erase(voitures.begin()+k);			//retirer de la liste des voitures car destination atteinte
 					}
-					addVoiture(nom, ptArriv, ptDepart); //ajout d'une nouvelle voiture faisant le chemin inverse*/
+					addVoiture(nom, rand() % 15, rand() % 15); //ajout d'une nouvelle voiture faisant le chemin inverse*/
 				}
 			}
 			pelotons.erase(pelotons.begin() + i);
