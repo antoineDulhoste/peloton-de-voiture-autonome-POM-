@@ -104,7 +104,6 @@ void Map::avancerPelotons(){
 					}
 				}
 				else{
-					std::cout << "AJOUT VOITURE" << '\n';
 					int ptArriv = currentV->getPointArrivee();
 					int ptDepart= currentV->getPointDepart();
 					string nom = currentV->getNom();
@@ -157,14 +156,10 @@ void Map::avancerPelotons(){
 							double distanceRestanteObj= sqrt(pow(points.at(objectif->itineraire.at(1)).getX() - objectif->posX, 2)+
 																						 pow(points.at(objectif->itineraire.at(1)).getY() - objectif->posY,2));
 							for(unsigned m=0; m < pelotons.at(pelotonList.at(l)).getPeloton().size(); m++){
-									if((unsigned)pelotonList.at(l) <= i){
+									if((unsigned)pelotonList.at(l) <= i)
 										newVitesse = distanceRestanteObj/(tickRestantSelf -1);
-										std::cout << pelotonList.at(l)<<" " << i <<" avant" << '\n';
-									}
-									else{
-										newVitesse = distanceRestanteObj/(tickRestantSelf -50);
-										std::cout << pelotonList.at(l)<<" " << i <<" apres" << '\n';
-									}
+									else
+										newVitesse = distanceRestanteObj/(tickRestantSelf -2);
 									getVoitureFromPeloton(pelotons.at(pelotonList.at(l)).getPeloton().at(m))->setVitesse(newVitesse);
 							}
 							std::cout << "peloton a fait acceler: " <<  getVoitureFromPeloton(pelotons.at(pelotonList.at(l)).getLeader())->getNom()<<" nouvelle vitesse :" <<newVitesse<< '\n';

@@ -70,6 +70,7 @@ int main(int argc, char* args[]) {
   voitures.push_back(Voiture("v2",2,9));
   voitures.push_back(Voiture("v3",12,9));
   voitures.push_back(Voiture("v4",6,9));
+  voitures.push_back(Voiture("v5",2,10));
   voitures.push_back(Voiture("v6",12,8));
   voitures.push_back(Voiture("v7",5,8));
   m.setVoitures(voitures);
