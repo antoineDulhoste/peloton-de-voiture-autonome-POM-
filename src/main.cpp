@@ -18,7 +18,7 @@ using namespace std;
 #define FONT_SIZE 20
 #define CAR_SIZE 40
 #define TICK_PER_FRAME 50
-#define NB_VOITURE 7
+#define NB_VOITURE 13
 #define RANDOM_SEED 12
 
 SDL_Window* window = NULL;  //initialize to null to setup renderer and textures before first display

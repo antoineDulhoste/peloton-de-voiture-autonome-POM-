@@ -1,6 +1,6 @@
 #include "map.h"
 
-#define MARGE_ERREUR 0.01
+#define MARGE_ERREUR 0.0000000001		//e10
 
 Map::Map(std::vector<Point> m, int larg,int lon): points(m), largeur(larg),longueur(lon){
 	nbPoints = m.size();
@@ -139,47 +139,89 @@ void Map::avancerPelotons(){
 				pelotons.at(i).setVisible(false);
 				std::cout << "depart du peloton de "<< getVoitureFromPeloton(pelotons.at(i).getLeader())->getNom() <<'\n';
 				std::vector<int> pelotonList;
-				unsigned prioPeloton = i;	//best current peloton is self
-				Voiture * test;
-				Voiture * best;
+				unsigned prioPeloton = i;	//best current peloton is self at begining
+				unsigned tempBest = i; //used to run algorithm
+				Voiture * testedLeader;
+				Voiture * bestLeader = getVoitureFromPeloton(pelotons.at(prioPeloton).getLeader()); 	//currently self
+				double vitesseNecessaireRejoindre;
+				int tickRestantObj;
+				int tickRestantSelf;
+				double distanceRestanteObj;
+				double distanceRestanteSelf = sqrt(pow(points.at(currentLeader->itineraire.at(1)).getX() - currentLeader->posX, 2)+
+																					 pow(points.at(currentLeader->itineraire.at(1)).getY() - currentLeader->posY,2));
 				for(unsigned k=0;k<pelotons.size();k++){	//estce que il a des pelotons qui ont la meme prochaine route que mon peloton ?
-					if(!memePeloton(pelotons.at(i).getLeader(), pelotons.at(k).getLeader()) &&
-					getVoitureFromPeloton(pelotons.at(i).getLeader())->itineraire.size() >2 && getVoitureFromPeloton(pelotons.at(k).getLeader())->itineraire.size() >2 &&
-					getVoitureFromPeloton(pelotons.at(i).getLeader())->itineraire.at(1) == getVoitureFromPeloton(pelotons.at(k).getLeader())->itineraire.at(1) &&
-					getVoitureFromPeloton(pelotons.at(i).getLeader())->itineraire.at(2) == getVoitureFromPeloton(pelotons.at(k).getLeader())->itineraire.at(2)){
+					testedLeader = getVoitureFromPeloton(pelotons.at(k).getLeader());
+					vitesseNecessaireRejoindre = distanceRestanteSelf / tickRestantObj;
+					if(!memePeloton(pelotons.at(i).getLeader(), pelotons.at(k).getLeader()) && currentLeader->itineraire.size() >2 && testedLeader->itineraire.size() >2 &&
+						currentLeader->itineraire.at(1) == testedLeader->itineraire.at(1) && currentLeader->itineraire.at(2) == testedLeader->itineraire.at(2)){
 						pelotonList.push_back(k);
-						if(pelotons.at(k).getPeloton().size() > pelotons.at(prioPeloton).getPeloton().size()) //test de taille des pelotons
-								prioPeloton = k;
-						test = getVoitureFromPeloton(pelotons.at(k).getLeader());
-						best = getVoitureFromPeloton(pelotons.at(prioPeloton).getLeader());
-						double distanceRestanteBest = sqrt(pow(points.at(best->itineraire.at(1)).getX() - best->posX, 2)+
-																					pow(points.at(best->itineraire.at(1)).getY() - best->posY,2));
-						double distanceRestanteTest= sqrt(pow(points.at(test->itineraire.at(1)).getX() - test->posX, 2)+
-																					pow(points.at(test->itineraire.at(1)).getY() - test->posY,2));
-						if(pelotons.at(k).getPeloton().size() == pelotons.at(prioPeloton).getPeloton().size() && distanceRestanteBest > distanceRestanteTest){ //test de distance a parcourir
-							prioPeloton = k;
+						std::cout << "est-ce que je peux me coupler a " << testedLeader->getNom() << '\n';
+						double distanceRestanteBest = sqrt(pow(points.at(bestLeader->itineraire.at(1)).getX() - bestLeader->posX, 2)+
+																					pow(points.at(bestLeader->itineraire.at(1)).getY() - bestLeader->posY,2));
+						distanceRestanteObj= sqrt(pow(points.at(testedLeader->itineraire.at(1)).getX() - testedLeader->posX, 2)+
+																			pow(points.at(testedLeader->itineraire.at(1)).getY() - testedLeader->posY,2));
+						if(pelotons.at(k).getPeloton().size() > pelotons.at(prioPeloton).getPeloton().size()){ //test de taille des pelotons
+								tempBest = k;
+								bestLeader = getVoitureFromPeloton(pelotons.at(tempBest).getLeader());
+								std::cout << testedLeader->getNom() << " a un peloton plus petit, on va donc le suivre (1)" << '\n';
 						}
-						if(pelotons.at(k).getPeloton().size() == pelotons.at(prioPeloton).getPeloton().size() && distanceRestanteBest == distanceRestanteTest && k<i){ //sinon prendre le plus haut de la liste
-							prioPeloton = k;
+						else if(pelotons.at(k).getPeloton().size() == pelotons.at(tempBest).getPeloton().size() && distanceRestanteBest > distanceRestanteObj){ //test de distance a parcourir
+							tempBest = k;
+							std::cout << testedLeader->getNom() << " a moins de distance a parcourir, on va donc le rattraper (2)" << '\n';
+						}
+						else if(pelotons.at(k).getPeloton().size() == pelotons.at(tempBest).getPeloton().size() && distanceRestanteBest == distanceRestanteObj && k<i){ //sinon prendre le plus haut de la liste
+							tempBest = k;
+							std::cout << testedLeader->getNom() << " est en haut dans la liste, on va donc le rattraper (3)" << '\n';
+						}
+						if(tempBest == k){	//si on a un nouveau meilleur
+							distanceRestanteObj= sqrt(pow(points.at(testedLeader->itineraire.at(1)).getX() - testedLeader->posX, 2)+
+																				pow(points.at(testedLeader->itineraire.at(1)).getY() - testedLeader->posY,2));
+							tickRestantObj = ceil(distanceRestanteObj/testedLeader->getVitesse());
+							if(i > k)
+								tickRestantObj++;
+							vitesseNecessaireRejoindre = distanceRestanteSelf / tickRestantObj;
+							std::cout << "j'ai besoin d'une vitesse de "<< vitesseNecessaireRejoindre<< " pour rejoindre le peloton de "<< getVoitureFromPeloton(pelotons.at(tempBest).getLeader())->getNom();
+							if(points.at(currentLeader->itineraire.at(0)).getVMinForDestIndex(currentLeader->itineraire.at(1)) <= vitesseNecessaireRejoindre &&
+								 points.at(currentLeader->itineraire.at(0)).getVMaxForDestIndex(currentLeader->itineraire.at(1)) >= vitesseNecessaireRejoindre){
+								std::cout << " JE PEUX LE FAIRE." << '\n';
+								prioPeloton = tempBest;
+							}
+							else{	//le peloton n'est en fait pas envisageable, donc on l'enlève de la liste
+								pelotonList.erase(pelotonList.end() -1);
+								std::cout << " C'EST TROP RAPIDE/LENT." << '\n';
+							}
+						}
+						else{		//est-ce qu'il a la vitesse necessaire pour se coller a moi
+							tickRestantSelf = ceil(distanceRestanteSelf/currentLeader->getVitesse());
+							if(k <= i)	//si il avance avant moi il a un tick d'avance
+								tickRestantSelf--;
+							vitesseNecessaireRejoindre = distanceRestanteObj/tickRestantSelf;
+							std::cout << "vitesse a tester : "<< vitesseNecessaireRejoindre << '\n';
+							//si le peloton ne peut avoir une vitesse convenable, on le sort de la liste
+							if(!(points.at(testedLeader->itineraire.at(0)).getVMinForDestIndex(testedLeader->itineraire.at(1)) <= vitesseNecessaireRejoindre &&
+								 points.at(testedLeader->itineraire.at(0)).getVMaxForDestIndex(testedLeader->itineraire.at(1)) >= vitesseNecessaireRejoindre)){
+								pelotonList.erase(pelotonList.end() -1);
+								std::cout << getVoitureFromPeloton(pelotons.at(k).getLeader())->getNom()<< " n'est pas envisageable pour des raisons de vitesse." << '\n';
+							}
 						}
 					}
 				}
+
 				//calculer la nouvelle vitesse
 				if(pelotonList.size() > 0){	//si il y a des pelotons a coupler
 					double newVitesse =0;
+					Voiture * objectif;
 					if(prioPeloton == i){	//si je suis le meilleur peloton
-						std::cout << currentLeader->getNom() << " amene les autres pelotons" << '\n';
-						double distanceRestanteSelf = sqrt(pow(points.at(currentLeader->itineraire.at(1)).getX() - currentLeader->posX, 2)+
-																					 pow(points.at(currentLeader->itineraire.at(1)).getY() - currentLeader->posY,2));
-						int tickRestantSelf = ceil(distanceRestanteSelf/currentLeader->getVitesse());
-						std::cout << "il reste "<< tickRestantSelf<< " tick a parcourir" << '\n';
+						tickRestantSelf = ceil(distanceRestanteSelf/currentLeader->getVitesse());
+						std::cout <<currentLeader->getNom() << " amene les autres pelotons , il lui reste "<< tickRestantSelf<< " tick a parcourir" << '\n';
 						for(unsigned l=0; l < pelotonList.size();l++){
-							Voiture * objectif = getVoitureFromPeloton(pelotons.at(pelotonList.at(l)).getLeader());
-							double distanceRestanteObj= sqrt(pow(points.at(objectif->itineraire.at(1)).getX() - objectif->posX, 2)+
-																						 pow(points.at(objectif->itineraire.at(1)).getY() - objectif->posY,2));
-							if((unsigned)pelotonList.at(l) <= i)
-								tickRestantSelf--;
-							newVitesse = distanceRestanteObj/(tickRestantSelf);
+							objectif = getVoitureFromPeloton(pelotons.at(pelotonList.at(l)).getLeader());
+							distanceRestanteObj= sqrt(pow(points.at(objectif->itineraire.at(1)).getX() - objectif->posX, 2)+
+																	      pow(points.at(objectif->itineraire.at(1)).getY() - objectif->posY,2));
+							if((unsigned)pelotonList.at(l) <= i)	//si il avance avant moi il a un tick d'avance
+								newVitesse = distanceRestanteObj/(tickRestantSelf -1);
+							else
+									newVitesse = distanceRestanteObj/tickRestantSelf;
 							for(unsigned m=0; m < pelotons.at(pelotonList.at(l)).getPeloton().size(); m++)
 									getVoitureFromPeloton(pelotons.at(pelotonList.at(l)).getPeloton().at(m))->setVitesse(newVitesse);
 							std::cout << "peloton a faire accelerer: " <<  getVoitureFromPeloton(pelotons.at(pelotonList.at(l)).getLeader())->getNom()
@@ -189,12 +231,10 @@ void Map::avancerPelotons(){
 					}
 					else{		//si je dois me fixer sur un autre peloton
 						//calculer la distance restante du peloton vise a parcourir
-						Voiture * objectif = getVoitureFromPeloton(pelotons.at(prioPeloton).getLeader());
-						double distanceRestanteObj = sqrt(pow(points.at(objectif->itineraire.at(1)).getX() - objectif->posX, 2)+
-																					 pow(points.at(objectif->itineraire.at(1)).getY() - objectif->posY,2));
-						int tickRestantObj = ceil(distanceRestanteObj/objectif->getVitesse());
-						double distanceRestanteSelf= sqrt(pow(points.at(currentLeader->itineraire.at(1)).getX() - currentLeader->posX, 2)+
-																					 pow(points.at(currentLeader->itineraire.at(1)).getY() - currentLeader->posY,2));
+						objectif = getVoitureFromPeloton(pelotons.at(prioPeloton).getLeader());
+						distanceRestanteObj = sqrt(pow(points.at(objectif->itineraire.at(1)).getX() - objectif->posX, 2)+
+																			 pow(points.at(objectif->itineraire.at(1)).getY() - objectif->posY,2));
+						tickRestantObj = ceil(distanceRestanteObj/objectif->getVitesse());
 						if(i > prioPeloton)
 							tickRestantObj++;
 						newVitesse = distanceRestanteSelf/tickRestantObj;
