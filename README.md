@@ -12,3 +12,14 @@ Use to compile :
 
   - make
   - make win (for windows compilation)
+
+In main.cpp:
+
+	To change the number of car :
+		NB_VOITURE
+
+	To add a point in the map:
+			points.push_back(Point(id,x,y));
+
+	To add a road in the map:
+			m.setRoute(point1, point2, vitesse_min, vitesse_max);
