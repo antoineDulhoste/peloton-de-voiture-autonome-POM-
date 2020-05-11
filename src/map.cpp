@@ -318,6 +318,8 @@ std::vector<int> Map::getItineraireBetween(int indexDepart, int indexArrivee){
 					itineraire.push_back(final.at(final.size()-1-i).parent);
 			}
 			std::reverse(itineraire.begin(), itineraire.end());
+			delete[] distance;
+			delete[] alreadyListed;
 			return itineraire;
 		}
 	  for(unsigned i=0;i<points.at(index.id).getDestinations().size();i++){	//ajouter les voisins
@@ -331,6 +333,8 @@ std::vector<int> Map::getItineraireBetween(int indexDepart, int indexArrivee){
 		alreadyListed[index.id]=true;
 		final.push_back(index);
 	}
+	delete[] distance;
+	delete[] alreadyListed;
   return itineraire;
 }
 

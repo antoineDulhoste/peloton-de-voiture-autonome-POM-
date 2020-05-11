@@ -18,7 +18,7 @@ using namespace std;
 #define FONT_SIZE 20
 #define CAR_SIZE 40
 #define TICK_PER_FRAME 50
-#define NB_VOITURE 13
+#define NB_VOITURE 10
 #define RANDOM_SEED 12
 
 SDL_Window* window = NULL;  //initialize to null to setup renderer and textures before first display
@@ -45,9 +45,9 @@ int main(int argc, char* args[]) {
   Map m(points, MAP_WIDTH,MAP_HEIGHT);
   m.setRoute(0, 1, 1, 5);
   m.setRoute(0, 2, 1, 5);
-  //m.setRoute(0, 3, 1, 5);
+  m.setRoute(0, 3, 1, 5);
   m.setRoute(0, 6, 1, 5);
-  //m.setRoute(0, 7, 1, 5);
+  m.setRoute(0, 7, 1, 5);
   m.setRoute(0, 11, 1, 5);
   m.setRoute(0, 12, 1, 5);
   m.setRoute(1, 12, 1, 5);
@@ -170,7 +170,8 @@ int main(int argc, char* args[]) {
         SDL_RenderCopy(renderer, texCar, NULL, &rectCar);
         SDL_RenderCopy(renderer, cartexFont, NULL, &rectFont);
       }
-
+      SDL_FreeSurface(fontSurface);
+      SDL_DestroyTexture(cartexFont);
       SDL_RenderPresent(renderer);
 
       //evolution des entites
@@ -192,6 +193,7 @@ int main(int argc, char* args[]) {
   for(unsigned i=0;i<m.getPoints().size();i++)
     SDL_DestroyTexture(texFont[i]);
   SDL_DestroyTexture(texCircle);
+  SDL_DestroyTexture(texCar);
   SDL_DestroyTexture(texBackground);
   TTF_CloseFont(font);
   SDL_DestroyRenderer(renderer);
