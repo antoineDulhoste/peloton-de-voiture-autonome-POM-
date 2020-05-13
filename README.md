@@ -6,18 +6,18 @@ Car will group on it a the next reached point.
 When a car reach its final destination, a new one appear with randomized start and final destination point
 
 Tested parameters are (in this order) :
-    Precondition :
-        Both group have the same next and second next point in common
-        If a group have to speed up or down, he is still in the speed limit of the road
+    *Precondition :*
+    Both group have the same next and second next point in common
+    If a group have to speed up or down, he is still in the speed limit of the road
     
     The group with highest value of members take the lead
     The group that have less distance to get to the meeting point take the lead
     The group that is first is the group list take the lead
 
 **KNOWN BUGS:**
-Due to rounded values of double (up to 15 decimals) we had to use a error margin to avoid error. We set this at e-10.
-When a new car spawn in the map, it may looks like the car superposed with an already present one without matching together in a group,
-Cars can't match on their first part of route and so they will on the second part if they can.
+    Due to rounded values of double (up to 15 decimals) we had to use a error margin to avoid error. We set this at e-10.
+    When a new car spawn in the map, it may looks like the car superposed with an already present one without matching together in a group,
+    Cars can't match on their first part of route and so they will on the second part if they can.
 
 Requirements to compile:
 
