@@ -4,19 +4,19 @@ WIN64 = x86_64-w64-mingw32-
 SDL2ARGS=-lSDL2 -lSDL2_image -lSDL2_ttf
 
 all :
-	make release/main.exe WIN32='' WIN64='' WINDOWSARGS=''  INCLUDEDIR='' LIBDIR=''
+	make main.exe WIN32='' WIN64='' WINDOWSARGS=''  INCLUDEDIR='' LIBDIR=''
 win :
-	make release/main.exe WIN32='i686-w64-mingw32-' WIN64='x86_64-w64-mingw32-' WINDOWSARGS='-static-libgcc -static-libstdc++' INCLUDEDIR='-I ./include' LIBDIR='-L ./lib'
+	make main.exe WIN32='i686-w64-mingw32-' WIN64='x86_64-w64-mingw32-' WINDOWSARGS='-static-libgcc -static-libstdc++' INCLUDEDIR='-I ./include' LIBDIR='-L ./lib'
 
 clean:
 	rm obj/*.o
-	rm release/*.exe
+	rm *.exe
 
 
 
 
-release/main.exe: obj/main.o obj/voiture.o obj/point.o obj/map.o obj/peloton.o
-	$(WIN32)g++ -Wall obj/main.o obj/voiture.o obj/point.o obj/map.o obj/peloton.o $(SDL2ARGS) $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -o release/main.exe
+main.exe: obj/main.o obj/voiture.o obj/point.o obj/map.o obj/peloton.o
+	$(WIN32)g++ -Wall obj/main.o obj/voiture.o obj/point.o obj/map.o obj/peloton.o $(SDL2ARGS) $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -o main.exe
 
 obj/main.o  : src/main.cpp
 	$(WIN32)g++ -Wall src/main.cpp $(SDL2ARGS) $(WINDOWSARGS) $(INCLUDEDIR) $(LIBDIR) -c -o obj/main.o

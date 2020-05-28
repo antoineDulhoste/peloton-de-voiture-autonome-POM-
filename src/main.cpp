@@ -102,7 +102,7 @@ int main(int argc, char* args[]) {
                 			    SDL_WINDOW_SHOWN);
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-  TTF_Font * font = TTF_OpenFont("../data/Aller_Bd.ttf", 25);
+  TTF_Font * font = TTF_OpenFont("data/Aller_Bd.ttf", 25);
   SDL_Color fontColor = { 0, 0, 0 };
   SDL_Texture* texFont[m.getPoints().size()];
   SDL_Surface* fontSurface;
@@ -112,9 +112,9 @@ int main(int argc, char* args[]) {
     texFont[i] = SDL_CreateTextureFromSurface(renderer, fontSurface);
   }
   SDL_FreeSurface(fontSurface);
-  SDL_Texture* texBackground = IMG_LoadTexture(renderer,"../data/grass.JPG");  //Load in GPU
-  SDL_Texture* texCircle = IMG_LoadTexture(renderer,"../data/circle.PNG");  //Load in GPU
-  SDL_Texture* texCar = IMG_LoadTexture(renderer,"../data/car-jam.PNG");  //Load in GPU
+  SDL_Texture* texBackground = IMG_LoadTexture(renderer,"data/grass.jpg");  //Load in GPU
+  SDL_Texture* texCircle = IMG_LoadTexture(renderer,"data/circle.png");  //Load in GPU
+  SDL_Texture* texCar = IMG_LoadTexture(renderer,"data/car-jam.png");  //Load in GPU
   SDL_Rect rectBackground = { 0, 0, SCREEN_HEIGHT, SCREEN_HEIGHT };
 
 
